@@ -5,16 +5,16 @@ var allEnemies = [];// Enemies our player must avoid
 
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-var Enemy = function(horizontalPosition, verticalPosition) {
+var Enemy = function(horizontalPosition, verticalPosition, speed) {
+    this.speed=speed;
     this.offset=25;
+    this.horizontalPosition=horizontalPosition;
     this.x = 101*horizontalPosition;
     this.y = 83*verticalPosition-this.offset;
     this.sprite = 'images/enemy-bug.png';
 };
 
-allEnemies.push(new Enemy(0,1));
-allEnemies.push(new Enemy(1,2));
-allEnemies.push(new Enemy(2,3));
+
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -22,6 +22,13 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    console.log(ctx.canvas.width);
+    if (this.x<ctx.canvas.width){
+     this.x=this.x+this.speed;
+    } else {
+        this.x=101*this.horizontalPosition;
+    }
+   
 };
 
 // Draw the enemy on the screen, required method for game
@@ -41,7 +48,7 @@ var Player = function(horizontalPosition, verticalPosition) {
     this.sprite = 'images/char-boy.png';
 };
 
-var player = new Player(2,5);
+
 
 Player.prototype.update = function(dt) {
 };
@@ -68,8 +75,10 @@ Player.prototype.handleInput = function (key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
-
+allEnemies.push(new Enemy(-1,1,1));
+allEnemies.push(new Enemy(-1,2,2));
+allEnemies.push(new Enemy(-1,3,3));
+var player = new Player(2,5);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
