@@ -7,6 +7,7 @@ var hud;
 var lives = 3;
 var level = 1;
 var points = 0;
+var stop;
 // Enemies our player must avoid
 
 // DZ : padding, polja za life, polje za bodove
@@ -33,11 +34,14 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    if (stop) {
+        return;
+    }
     if (this.x < ctx.canvas.width){
-     this.x = this.x + this.speed;
+     this.x = this.x + this.speed * player.level;
     } else {
         this.x = blockWidth * this.horizontalPosition;
-    }
+    };
    
 };
 
@@ -73,14 +77,22 @@ var Player = function(horizontalPosition, verticalPosition, lives, level, points
 Player.prototype.goToStart = function() {
     this.x = blockWidth * this.horizontalPosition;
     this.y = blockHeight * this.verticalPosition - this.offset;
-}
+};
 
-Player.prototype.update = function() {
+Player.prototype.update = function() {   
+    if (stop) {
+        return;
+    }
     var self = this;
     allEnemies.forEach(function (enemy){
         if ((enemy.x + enemy.sprite.width)>= (self.x + self.padding) && (enemy.x)<=( (self.x + self.padding) + (self.sprite.width - (self.padding*2)) ) && (enemy.y+enemy.offset)===(self.y+self.offset)){
             self.goToStart ();
             self.lives = self.lives - 1;
+            if (self.lives === 0) {
+                stop = true;
+            } else {
+                self.goToStart();
+            }
         }
     });
     if (this.y <= 0){
@@ -101,6 +113,9 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function (key) {
+  if (stop) {
+        return;
+  }
   if (key==='up' && this.y > 0) {
     this.y = this.y-blockHeight;
     //this.y -= blockHeight; ako je netko to napisao ošamariš ga
@@ -123,7 +138,7 @@ var Hud = function (initialText,x,y) {
 };
 
 Hud.prototype.update = function () {
-    this.text = player.lives + ' ' + player.level + ' ' + player.points;
+    this.text = '❤' + player.lives + '          lvl' + player.level + '          $' + player.points;
 };
 
 Hud.prototype.render = function () {
@@ -137,11 +152,12 @@ Hud.prototype.render = function () {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 Resources.onReady(function() {
-allEnemies.push(new Enemy(-1,1,1));
-allEnemies.push(new Enemy(-1,2,2));
-allEnemies.push(new Enemy(-1,3,3));
-player = new Player(2, 5, lives, level, points);
-hud = new Hud(lives + ' ' + level + ' ' + points, 10, 0);
+    stop = false;
+    allEnemies.push(new Enemy(-1,1,1));
+    allEnemies.push(new Enemy(-1,2,2));
+    allEnemies.push(new Enemy(-1,3,3));
+    player = new Player(2, 5, lives, level, points);
+    hud = new Hud(lives + ' ' + level + ' ' + points, 10, 0);
 });
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
