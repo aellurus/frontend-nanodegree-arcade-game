@@ -40,7 +40,7 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(this.sprite, this.x, this.y);
-    if(debug){
+    if (debug) {
         ctx.beginPath();
         ctx.lineWidth = "2";
         ctx.strokeStyle = "red";
@@ -80,7 +80,7 @@ Player.prototype.update = function() {
 
 Player.prototype.render = function() {
     ctx.drawImage(this.sprite, this.x, this.y);
-    if (debug){
+    if (debug) {
         ctx.beginPath();
         ctx.lineWidth = "2";
         ctx.strokeStyle = "yellow";
