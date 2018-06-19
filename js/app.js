@@ -82,7 +82,11 @@ Player.prototype.update = function() {
             self.goToStart ();
             self.lives = self.lives - 1;
         }
-    })
+    });
+    if (this.y <= 0){
+        this.goToStart ();
+        this.level = this.level + 1;
+    };
 };
 
 Player.prototype.render = function() {
