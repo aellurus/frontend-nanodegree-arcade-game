@@ -62,28 +62,27 @@ var Player = function(horizontalPosition, verticalPosition, lives, level, points
     this.offset = 40;
     this.horizontalPosition = horizontalPosition;
     this.verticalPosition = verticalPosition;
-    this.x = blockWidth * horizontalPosition;
-    this.y = blockHeight * verticalPosition - this.offset;
     this.sprite = Resources.get('images/char-boy.png');
     this.padding = 30;
     this.lives = lives;
     this.level = level;
     this.points = points;
+    this.goToStart ();
 };
 
+Player.prototype.goToStart = function() {
+    this.x = blockWidth * this.horizontalPosition;
+    this.y = blockHeight * this.verticalPosition - this.offset;
+}
 
 Player.prototype.update = function() {
     var self = this;
     allEnemies.forEach(function (enemy){
         if ((enemy.x + enemy.sprite.width)>= (self.x + self.padding) && (enemy.x)<=( (self.x + self.padding) + (self.sprite.width - (self.padding*2)) ) && (enemy.y+enemy.offset)===(self.y+self.offset)){
-            self.x = blockWidth * self.horizontalPosition;
-            self.y = blockHeight * self.verticalPosition - self.offset;
+            self.goToStart ();
             self.lives = self.lives - 1;
         }
     })
-
-        
-    
 };
 
 Player.prototype.render = function() {
