@@ -3,6 +3,10 @@ var player;
 var blockWidth = 101;
 var blockHeight = 83;
 var debug = false;
+var hud;
+var lives = 3;
+var level = 1;
+var points = 0;
 // Enemies our player must avoid
 
 // DZ : padding, polja za life, polje za bodove
@@ -54,7 +58,7 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 //konstruktor
-var Player = function(horizontalPosition, verticalPosition) {
+var Player = function(horizontalPosition, verticalPosition, lives, level, points) {
     this.offset = 40;
     this.horizontalPosition = horizontalPosition;
     this.verticalPosition = verticalPosition;
@@ -62,6 +66,9 @@ var Player = function(horizontalPosition, verticalPosition) {
     this.y = blockHeight * verticalPosition - this.offset;
     this.sprite = Resources.get('images/char-boy.png');
     this.padding = 30;
+    this.lives = lives;
+    this.level = level;
+    this.points = points;
 };
 
 
@@ -71,6 +78,7 @@ Player.prototype.update = function() {
         if ((enemy.x + enemy.sprite.width)>= (self.x + self.padding) && (enemy.x)<=( (self.x + self.padding) + (self.sprite.width - (self.padding*2)) ) && (enemy.y+enemy.offset)===(self.y+self.offset)){
             self.x = blockWidth * self.horizontalPosition;
             self.y = blockHeight * self.verticalPosition - self.offset;
+            self.lives = self.lives - 1;
         }
     })
 
@@ -104,6 +112,24 @@ Player.prototype.handleInput = function (key) {
     this.x = this.x + blockWidth;
   }
 };
+
+var Hud = function (initialText,x,y) {
+    this.text = initialText;
+    this.x = x;
+    this.y = y;
+};
+
+Hud.prototype.update = function () {
+    this.text = player.lives + ' ' + player.level + ' ' + player.points;
+};
+
+Hud.prototype.render = function () {
+    ctx.fillStyle = 'black';
+    ctx.textBaseline = 'top';
+    ctx.font = '48px Helvetica';
+    ctx.fillText(this.text, this.x, this.y);
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -111,7 +137,8 @@ Resources.onReady(function() {
 allEnemies.push(new Enemy(-1,1,1));
 allEnemies.push(new Enemy(-1,2,2));
 allEnemies.push(new Enemy(-1,3,3));
-player = new Player(2,5);
+player = new Player(2, 5, lives, level, points);
+hud = new Hud(lives + ' ' + level + ' ' + points, 10, 0);
 });
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
