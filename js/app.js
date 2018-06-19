@@ -41,11 +41,12 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
     ctx.drawImage(this.sprite, this.x, this.y);
     if(debug){
-    ctx.beginPath();
-        ctx.lineWidth="2";
-        ctx.strokeStyle="red";
+        ctx.beginPath();
+        ctx.lineWidth = "2";
+        ctx.strokeStyle = "red";
         ctx.rect(this.x, this.y, this.sprite.width, this.sprite.height);
-        ctx.stroke();};
+        ctx.stroke();
+    };
 };
 
 // Now write your own player class
@@ -81,10 +82,11 @@ Player.prototype.render = function() {
     ctx.drawImage(this.sprite, this.x, this.y);
     if (debug){
         ctx.beginPath();
-    ctx.lineWidth="2";
-    ctx.strokeStyle="yellow";
-    ctx.rect(this.x + this.padding, this.y + this.padding, this.sprite.width - (this.padding * 2), this.sprite.height - (this.padding * 2));
-    ctx.stroke();};
+        ctx.lineWidth = "2";
+        ctx.strokeStyle = "yellow";
+        ctx.rect(this.x + this.padding, this.y + this.padding, this.sprite.width - (this.padding * 2), this.sprite.height - (this.padding * 2));
+        ctx.stroke();
+    };
 };
 
 Player.prototype.handleInput = function (key) {
