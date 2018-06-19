@@ -6,7 +6,6 @@ var debug = false;
 var hud;
 var lives = 3;
 var level = 1;
-var points = 0;
 var stop;
 // Enemies our player must avoid
 
@@ -62,7 +61,7 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 //konstruktor
-var Player = function(horizontalPosition, verticalPosition, lives, level, points) {
+var Player = function(horizontalPosition, verticalPosition, lives, level) {
     this.offset = 40;
     this.horizontalPosition = horizontalPosition;
     this.verticalPosition = verticalPosition;
@@ -70,7 +69,6 @@ var Player = function(horizontalPosition, verticalPosition, lives, level, points
     this.padding = 30;
     this.lives = lives;
     this.level = level;
-    this.points = points;
     this.goToStart ();
 };
 
@@ -138,7 +136,7 @@ var Hud = function (initialText,x,y) {
 };
 
 Hud.prototype.update = function () {
-    this.text = '❤' + player.lives + '          lvl' + player.level + '          $' + player.points;
+    this.text = '❤' + player.lives + '                         lvl' + player.level;
 };
 
 Hud.prototype.render = function () {
@@ -156,8 +154,8 @@ Resources.onReady(function() {
     allEnemies.push(new Enemy(-1,1,1));
     allEnemies.push(new Enemy(-1,2,2));
     allEnemies.push(new Enemy(-1,3,3));
-    player = new Player(2, 5, lives, level, points);
-    hud = new Hud(lives + ' ' + level + ' ' + points, 10, 0);
+    player = new Player(2, 5, lives, level);
+    hud = new Hud(lives + ' ' + level, 10, 0);
 });
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
