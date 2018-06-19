@@ -1,8 +1,12 @@
 var allEnemies = [];
+var player;
 var blockWidth = 101;
 var blockHeight = 83;
+var debug = false;
 // Enemies our player must avoid
-//DZ - stavi enemya na mapu!!
+
+// DZ : padding, polja za life, polje za bodove
+
   // Variables applied to each of our instances go here,
   // we've provided one for you to get started
 
@@ -14,7 +18,7 @@ var Enemy = function(horizontalPosition, verticalPosition, speed) {
     this.horizontalPosition = horizontalPosition;
     this.x = blockWidth * horizontalPosition;
     this.y = blockHeight * verticalPosition-this.offset;
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = Resources.get('images/enemy-bug.png');
 };
 
 
@@ -35,7 +39,13 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(this.sprite, this.x, this.y);
+    if(debug){
+    ctx.beginPath();
+        ctx.lineWidth="2";
+        ctx.strokeStyle="red";
+        ctx.rect(this.x, this.y, this.sprite.width, this.sprite.height);
+        ctx.stroke();};
 };
 
 // Now write your own player class
@@ -49,17 +59,15 @@ var Player = function(horizontalPosition, verticalPosition) {
     this.verticalPosition = verticalPosition;
     this.x = blockWidth * horizontalPosition;
     this.y = blockHeight * verticalPosition - this.offset;
-    this.sprite = 'images/char-boy.png';
-    this.threshold = 5;
+    this.sprite = Resources.get('images/char-boy.png');
+    this.padding = 30;
 };
 
 
 Player.prototype.update = function() {
-    var min = this.x - this.threshold;
-    var max = this.x + this.threshold;
     var self = this;
     allEnemies.forEach(function (enemy){
-        if (enemy.x > min && enemy.x < max && enemy.y+enemy.offset===self.y+self.offset){
+        if ((enemy.x + enemy.sprite.width)>= (self.x + self.padding) && (enemy.x)<=( (self.x + self.padding) + (self.sprite.width - (self.padding*2)) ) && (enemy.y+enemy.offset)===(self.y+self.offset)){
             self.x = blockWidth * self.horizontalPosition;
             self.y = blockHeight * self.verticalPosition - self.offset;
         }
@@ -70,7 +78,13 @@ Player.prototype.update = function() {
 };
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(this.sprite, this.x, this.y);
+    if (debug){
+        ctx.beginPath();
+    ctx.lineWidth="2";
+    ctx.strokeStyle="yellow";
+    ctx.rect(this.x + this.padding, this.y + this.padding, this.sprite.width - (this.padding * 2), this.sprite.height - (this.padding * 2));
+    ctx.stroke();};
 };
 
 Player.prototype.handleInput = function (key) {
@@ -91,11 +105,12 @@ Player.prototype.handleInput = function (key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+Resources.onReady(function() {
 allEnemies.push(new Enemy(-1,1,1));
 allEnemies.push(new Enemy(-1,2,2));
 allEnemies.push(new Enemy(-1,3,3));
-var player = new Player(2,5);
-
+player = new Player(2,5);
+});
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
