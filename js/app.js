@@ -7,15 +7,8 @@ var hud;
 var lives = 3;
 var level = 1;
 var stop;
-// Enemies our player must avoid
 
-// DZ : padding, polja za life, polje za bodove
-
-  // Variables applied to each of our instances go here,
-  // we've provided one for you to get started
-
-  // The image/sprite for our enemies, this uses
-  // a helper we've provided to easily load images
+// Enemy constructor
 var Enemy = function(horizontalPosition, verticalPosition, speed) {
     this.speed = speed;
     this.offset = 25;
@@ -27,12 +20,8 @@ var Enemy = function(horizontalPosition, verticalPosition, speed) {
 
 
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+//Define enemy movement
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
     if (stop) {
         return;
     }
@@ -44,7 +33,7 @@ Enemy.prototype.update = function(dt) {
    
 };
 
-// Draw the enemy on the screen, required method for game
+// Draw the enemy
 Enemy.prototype.render = function() {
     ctx.drawImage(this.sprite, this.x, this.y);
     if (debug) {
@@ -56,11 +45,7 @@ Enemy.prototype.render = function() {
     };
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
-//konstruktor
+//Player constructor
 var Player = function(horizontalPosition, verticalPosition, lives, level) {
     this.offset = 40;
     this.horizontalPosition = horizontalPosition;
@@ -72,11 +57,13 @@ var Player = function(horizontalPosition, verticalPosition, lives, level) {
     this.goToStart ();
 };
 
+//Set player to inital position
 Player.prototype.goToStart = function() {
     this.x = blockWidth * this.horizontalPosition;
     this.y = blockHeight * this.verticalPosition - this.offset;
 };
 
+//Define player - enemy crash point and player level up point
 Player.prototype.update = function() {   
     if (stop) {
         return;
@@ -88,6 +75,8 @@ Player.prototype.update = function() {
             self.lives = self.lives - 1;
             if (self.lives === 0) {
                 stop = true;
+                alert("GAME OVER! TRY AGAIN!");
+                document.location.reload();
             } else {
                 self.goToStart();
             }
@@ -99,6 +88,7 @@ Player.prototype.update = function() {
     };
 };
 
+//Draw player
 Player.prototype.render = function() {
     ctx.drawImage(this.sprite, this.x, this.y);
     if (debug) {
@@ -110,13 +100,13 @@ Player.prototype.render = function() {
     };
 };
 
+//Player movements
 Player.prototype.handleInput = function (key) {
   if (stop) {
         return;
   }
   if (key==='up' && this.y > 0) {
     this.y = this.y-blockHeight;
-    //this.y -= blockHeight; ako je netko to napisao ošamariš ga
   }
   if (key==='down' && this.y < 5 * blockHeight - this.offset) {
     this.y = this.y+blockHeight;
@@ -129,6 +119,7 @@ Player.prototype.handleInput = function (key) {
   }
 };
 
+// Head up display constructor and functions for the writing
 var Hud = function (initialText,x,y) {
     this.text = initialText;
     this.x = x;
@@ -146,9 +137,7 @@ Hud.prototype.render = function () {
     ctx.fillText(this.text, this.x, this.y);
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// Initiate objects
 Resources.onReady(function() {
     stop = false;
     allEnemies.push(new Enemy(-1,1,1));
@@ -157,6 +146,7 @@ Resources.onReady(function() {
     player = new Player(2, 5, lives, level);
     hud = new Hud(lives + ' ' + level, 10, 0);
 });
+
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
