@@ -20,7 +20,7 @@ var Enemy = function(horizontalPosition, verticalPosition, speed) {
 
 
 
-//Define enemy movement
+// Define enemy movement
 Enemy.prototype.update = function(dt) {
     if (stop) {
         return;
@@ -45,7 +45,7 @@ Enemy.prototype.render = function() {
     };
 };
 
-//Player constructor
+// Player constructor
 var Player = function(horizontalPosition, verticalPosition, lives, level) {
     this.offset = 40;
     this.horizontalPosition = horizontalPosition;
@@ -57,13 +57,13 @@ var Player = function(horizontalPosition, verticalPosition, lives, level) {
     this.goToStart ();
 };
 
-//Set player to inital position
+// Set player to inital position
 Player.prototype.goToStart = function() {
     this.x = blockWidth * this.horizontalPosition;
     this.y = blockHeight * this.verticalPosition - this.offset;
 };
 
-//Define player - enemy crash point and player level up point
+// Define player - enemy crash point and player level up point
 Player.prototype.update = function() {   
     if (stop) {
         return;
@@ -75,8 +75,6 @@ Player.prototype.update = function() {
             self.lives = self.lives - 1;
             if (self.lives === 0) {
                 stop = true;
-                alert("GAME OVER! TRY AGAIN!");
-                document.location.reload();
             } else {
                 self.goToStart();
             }
@@ -88,7 +86,7 @@ Player.prototype.update = function() {
     };
 };
 
-//Draw player
+// Draw player
 Player.prototype.render = function() {
     ctx.drawImage(this.sprite, this.x, this.y);
     if (debug) {
@@ -100,7 +98,7 @@ Player.prototype.render = function() {
     };
 };
 
-//Player movements
+// Player movements
 Player.prototype.handleInput = function (key) {
   if (stop) {
         return;
@@ -137,7 +135,7 @@ Hud.prototype.render = function () {
     ctx.fillText(this.text, this.x, this.y);
 };
 
-// Initiate objects
+// Instantiate objects
 Resources.onReady(function() {
     stop = false;
     allEnemies.push(new Enemy(-1,1,1));
