@@ -7,6 +7,7 @@ var hud;
 var lives = 3;
 var level = 1;
 var stop;
+var resetOverlay;
 
 // Enemy constructor
 var Enemy = function(horizontalPosition, verticalPosition, speed) {
@@ -135,16 +136,46 @@ Hud.prototype.render = function () {
     ctx.fillText(this.text, this.x, this.y);
 };
 
+// Reset game after it stops
+var ResetOverlay = function () {
+    this.width = ctx.canvas.width;
+    this.height = ctx.canvas.height;
+    ctx.canvas.addEventListener('click', function() {
+        if (stop === true) {
+            reset();
+        }
+    });
+};
+
+ResetOverlay.prototype.update = function () {};
+
+ResetOverlay.prototype.render = function () {
+    if (stop === false){
+        return;
+    }
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(0, 0, this.width, this.height);
+    ctx.fillStyle = 'rgba(255,255,255,1)';
+    ctx.textBaseline = 'top';
+    ctx.font = '72px Helvetica';
+    ctx.fillText("Click to reset!", 40, 250);
+};
+
 // Instantiate objects
 Resources.onReady(function() {
+    reset();
+});
+
+var reset = function () {
     stop = false;
+    allEnemies = [];
     allEnemies.push(new Enemy(-1,1,1));
     allEnemies.push(new Enemy(-1,2,2));
     allEnemies.push(new Enemy(-1,3,3));
     player = new Player(2, 5, lives, level);
     hud = new Hud(lives + ' ' + level, 10, 0);
-});
-
+    resetOverlay = new ResetOverlay();
+}
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
